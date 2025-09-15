@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:flutter_tts/flutter_tts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,22 +30,24 @@ class _MyAppState extends State<MyApp> {
       title: 'Speech to Text Demo',
       theme: _isDarkTheme
           ? ThemeData.dark().copyWith(
-        colorScheme: const ColorScheme.dark().copyWith(
-          primary: Colors.tealAccent,
-        ),
-      )
+              colorScheme: const ColorScheme.dark().copyWith(
+                primary: Colors.tealAccent,
+              ),
+            )
           : ThemeData.light().copyWith(
-        primaryColor: Colors.blue,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              primaryColor: Colors.blue,
+              elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                    horizontal: 20,
+                  ),
+                ),
+              ),
             ),
-            padding:
-            const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-          ),
-        ),
-      ),
       home: SpeechHomePage(onToggleTheme: _toggleTheme),
     );
   }
@@ -65,10 +68,24 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+  final FlutterTts _flutterTts = FlutterTts();
+
   @override
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+    _initializeTTS();
+  }
+
+  void _initializeTTS() async {
+    await _flutterTts.setLanguage("en-US");
+    await _flutterTts.setSpeechRate(0.5);
+    await _flutterTts.setVolume(1.0);
+    await _flutterTts.setPitch(1.0);
+  }
+
+  Future<void> _speak(String message) async {
+    await _flutterTts.speak(message);
   }
 
   void _listen() async {
@@ -83,18 +100,21 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
         _speech.listen(
           onResult: (val) {
             setState(() {
-              _text = val.recognizedWords;
+              _text = val.recognizedWords.toLowerCase();
 
-              if (_text.toLowerCase() == "open keyboard") {
+              if (_text == "open the keyboard") {
                 FocusScope.of(context).requestFocus(_focusNode);
                 Future.delayed(const Duration(milliseconds: 100), () {
                   SystemChannels.textInput.invokeMethod('TextInput.show');
                 });
-              } else if (_text.toLowerCase() == "close keyboard") {
+                _speak("Keyboard is now open.");
+              } else if (_text == "close the keyboard") {
                 FocusScope.of(context).unfocus();
                 SystemChannels.textInput.invokeMethod('TextInput.hide');
-              } else if (_text.toLowerCase() == "change the theme") {
+                _speak("Keyboard is now closed.");
+              } else if (_text == "change the theme") {
                 widget.onToggleTheme();
+                _speak("Theme changed.");
               } else {
                 _controller.text = _text;
                 _controller.selection = TextSelection.fromPosition(
@@ -109,6 +129,13 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
       setState(() => _isListening = false);
       _speech.stop();
     }
+  }
+
+  @override
+  void dispose() {
+    _speech.stop();
+    _flutterTts.stop();
+    super.dispose();
   }
 
   @override
@@ -136,15 +163,14 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 filled: true,
-                fillColor:
-                Theme.of(context).colorScheme.surfaceContainerHighest,
+                fillColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
                 hintText: "Say something or type here...",
-                hintStyle: TextStyle(
-                  color: Theme.of(context).hintColor,
-                ),
+                hintStyle: TextStyle(color: Theme.of(context).hintColor),
               ),
             ),
             const SizedBox(height: 30),
