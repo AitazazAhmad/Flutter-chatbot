@@ -1,16 +1,42 @@
-# chatbot
+# 🎙️ Flutter Voice Controlled Chatbot App
 
-A new Flutter project.
+A **voice-controlled chatbot app** built with **Flutter**.\
+This app uses **speech recognition (speech_to_text)** and **text-to-speech
+(flutter_tts)** to provide a hands-free experience.\
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🎤 **Voice to Text** – Speak into the mic and see your words appear in the
+  text field.
+- 🗣️ **Text to Speech** – App responds to your commands with a voice.
+- 🎨 **Theme Switcher** – Say `"change the theme"` or toggle manually to switch
+  between **Light/Dark mode**.
+- ⌨️ **Keyboard Control** – Open/close the on-screen keyboard with voice.
+- 🧹 **Clear Input** – Say `"clear text"` to reset the text field.
+- ❌ **Exit App** – Say `"exit app"` to close the application.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
+## Voice commands
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# open the keyboard->(Opens the on-screen keyboard)
+
+# close the keyboard->(Closes the on-screen keyboard)
+
+# change the theme->(Toggles between dark/light theme)
+
+# clear text->(Clears the input text field)
+
+# exit app->(Closes the app)
+
+---
+
+# Installation
+
+# git clone https://github.com/AitazazAhmad/Flutter-chatbot.git cd Flutter-chatbot
+
+# flutter pub get
+
+# flutter run

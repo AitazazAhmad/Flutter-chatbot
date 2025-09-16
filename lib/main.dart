@@ -115,6 +115,14 @@ class _SpeechHomePageState extends State<SpeechHomePage> {
               } else if (_text == "change the theme") {
                 widget.onToggleTheme();
                 _speak("Theme changed.");
+              } else if (_text == "clear the text") {
+                _controller.clear();
+                _speak("Text cleared.");
+              } else if (_text == "exit the app") {
+                _speak("Closing the app.");
+                Future.delayed(const Duration(seconds: 1), () {
+                  SystemNavigator.pop();
+                });
               } else {
                 _controller.text = _text;
                 _controller.selection = TextSelection.fromPosition(
