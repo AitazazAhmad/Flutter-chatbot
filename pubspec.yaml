@@ -12,7 +12,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   speech_to_text: ^7.0.0
-  flutter_tts: ^3.6.3  
+  flutter_tts: ^3.6.3
+  sqflite: ^2.3.0
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
